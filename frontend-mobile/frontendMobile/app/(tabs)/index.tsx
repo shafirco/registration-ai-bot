@@ -1,115 +1,153 @@
 import React, { useState } from "react";
 import {
+  SafeAreaView,
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
-export default function RegisterScreen() {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+}
 
-  const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
+export default function App() {
+  const [form, setForm] = useState<FormData>({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (key: keyof FormData, value: string) => {
+    setForm({ ...form, [key]: value });
   };
 
-  const handleRegister = () => {
-    if (!fullName || !email || !password) {
-      Alert.alert("שגיאה", "יש למלא את כל השדות");
-      return;
-    }
-    if (!validateEmail(email)) {
-      Alert.alert("שגיאה", "האימייל אינו תקין");
-      return;
-    }
-    if (password.length < 6) {
-      Alert.alert("שגיאה", "הסיסמה חייבת להכיל לפחות 6 תווים");
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || !form.password) {
+      Toast.show({
+        type: "error",
+        text1: "נא למלא את כל השדות",
+      });
       return;
     }
 
-    Alert.alert("נרשמת בהצלחה!", "בהמשך זה יישלח לשרת.");
+    try {
+      const res = await fetch("http://10.0.2.2:5000/register", {
+        // ⚠️ Android Emulator = 10.0.2.2
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        Toast.show({
+          type: "success",
+          text1: data.ai_message || "נרשמת בהצלחה!",
+        });
+        setForm({ name: "", email: "", password: "" });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: data.detail || "שגיאה בהרשמה",
+        });
+      }
+    } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: "שרת לא זמין",
+      });
+    }
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Registration</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>צור חשבון חדש</Text>
 
         <TextInput
+          placeholder="שם מלא"
           style={styles.input}
-          placeholder="Full Name"
-          value={fullName}
-          onChangeText={setFullName}
+          value={form.name}
+          onChangeText={(v) => handleChange("name", v)}
         />
+
         <TextInput
+          placeholder="אימייל"
           style={styles.input}
-          placeholder="Email"
           keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+          value={form.email}
+          onChangeText={(v) => handleChange("email", v)}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
+        <TextInput
+          placeholder="סיסמה"
+          style={styles.input}
+          secureTextEntry
+          value={form.password}
+          onChangeText={(v) => handleChange("password", v)}
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>הרשמה</Text>
         </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+
+      <Toast />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
+    backgroundColor: "#eef3f8",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 20,
-    backgroundColor: "#f5f6fa",
+  },
+  card: {
+    backgroundColor: "#fff",
+    width: "85%",
+    paddingVertical: 40,
+    paddingHorizontal: 25,
+    borderRadius: 16,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 40,
-    color: "#333",
+    fontSize: 22,
+    color: "#2b3a55",
+    textAlign: "center",
+    marginBottom: 25,
+    fontWeight: "600",
   },
   input: {
-    width: "100%",
+    backgroundColor: "#f7f9fb",
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 12,
+    borderColor: "#cfd8dc",
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    fontSize: 15,
     marginBottom: 15,
-    fontSize: 16,
-    backgroundColor: "#fff",
   },
   button: {
-    backgroundColor: "#007AFF",
-    width: "100%",
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginTop: 10,
+    backgroundColor: "#4a90e2",
+    paddingVertical: 12,
+    borderRadius: 8,
   },
   buttonText: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
