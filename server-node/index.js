@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+import { handleChat } from "./agent/index.js";
 
 dotenv.config();
 const app = express();
@@ -30,6 +31,31 @@ app.get("/random-message", async (req, res) => {
   } catch (error) {
     console.error("Error fetching OpenAI message:", error.message);
     res.status(500).json({ error: "Failed to fetch message" });
+  }
+});
+
+// Route: LangChain Agent Chat
+app.post("/agent/chat", async (req, res) => {
+  try {
+    const { name, phone, message } = req.body;
+
+    // Validate input
+    if (!name || !phone || !message) {
+      return res.status(400).json({
+        error: "Missing required fields: name, phone, message",
+      });
+    }
+
+    // Handle the chat with LangChain agent
+    const response = await handleChat({ name, phone, message });
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error in agent chat:", error.message);
+    res.status(500).json({
+      error: "Failed to process chat",
+      details: error.message,
+    });
   }
 });
 
