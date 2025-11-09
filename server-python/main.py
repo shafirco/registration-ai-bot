@@ -3,10 +3,26 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, EmailStr
 from pymongo import MongoClient
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 import bcrypt
 import requests
 
 app = FastAPI()
+
+# ✅ Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",  # React Web
+        "http://127.0.0.1:3000",
+        "http://localhost:19006", # Expo (web preview)
+        "exp://127.0.0.1:19000",  # Expo (mobile)
+        "http://10.0.2.2:19000"   # Android emulator
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- Database connection ---
 client = MongoClient("mongodb+srv://shafircohen6:Sc315995589@cluster0.zloe96j.mongodb.net/?appName=Cluster0")

@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import Toast from "react-native-toast-message";
+import ChatBot from "../../components/ChatBot";
 
 interface FormData {
   name: string;
@@ -36,7 +37,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch("http://10.0.2.2:5000/register", {
+      const res = await fetch("http://10.0.0.5:5000/register", {
         // ⚠️ Android Emulator = 10.0.2.2
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -99,6 +100,7 @@ export default function App() {
       </View>
 
       <Toast />
+      <ChatBot />
     </SafeAreaView>
   );
 }
