@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import ChatBot from "./components/ChatBot";
 
 function App() {
   const [form, setForm] = useState({
@@ -72,6 +73,7 @@ function App() {
       </div>
 
       <ToastContainer position="top-center" autoClose={4000} />
+      <ChatBot />
     </div>
   );
 }
