@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
-import { handleChat } from "./agent/index.js";
+import { handleChat } from "./dist/agent/index.js";
 
 dotenv.config();
 const app = express();
