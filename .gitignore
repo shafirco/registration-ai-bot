@@ -14,3 +14,5 @@ venv/
 
 # Environment files
 .env
+server-python/.env
+server-node/.env

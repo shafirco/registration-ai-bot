@@ -1,0 +1,11 @@
+# עותק את הקובץ הזה ל-.env ומלא את הערכים שלך
+
+# MongoDB Configuration (חובה!)
+MONGODB_URL=mongodb+srv://shafircohen6:Sc315995589@cluster0.zloe96j.mongodb.net/?appName=Cluster0
+DATABASE_NAME=registration_db
+
+# Node.js Server URL (ברירת מחדל: http://localhost:4000)
+NODE_SERVER_URL=http://localhost:4000
+
+# Server Port (ברירת מחדל: 5000)
+PORT=5000

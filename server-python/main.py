@@ -6,6 +6,11 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 import bcrypt
 import requests
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI()
 
@@ -25,8 +30,14 @@ app.add_middleware(
 )
 
 # --- Database connection ---
-client = MongoClient("mongodb+srv://shafircohen6:Sc315995589@cluster0.zloe96j.mongodb.net/?appName=Cluster0")
-db = client["registration_db"]
+MONGODB_URL = os.getenv("MONGODB_URL")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "registration_db")
+
+if not MONGODB_URL:
+    raise ValueError("MONGODB_URL environment variable is required")
+
+client = MongoClient(MONGODB_URL)
+db = client[DATABASE_NAME]
 users_collection = db["users"]
 
 # --- Request model ---
@@ -57,8 +68,9 @@ def register_user(user: UserRegister):
     users_collection.insert_one(user_doc)
 
     # --- קרא לשרת Node.js כדי להביא הודעת AI ---
+    NODE_SERVER_URL = os.getenv("NODE_SERVER_URL", "http://localhost:4000")
     try:
-        response = requests.get("http://localhost:4000/random-message")
+        response = requests.get(f"{NODE_SERVER_URL}/random-message")
         ai_data = response.json()
         ai_message = ai_data.get("quote", "")
     except Exception as e:

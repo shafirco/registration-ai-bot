@@ -36,8 +36,9 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-## שלב 2: הגדרת קובץ .env
+## שלב 2: הגדרת קבצי .env
 
+### Server Node (בוט הצ'אט):
 צור קובץ `.env` בתיקיית `server-node/`:
 
 ```env
@@ -49,10 +50,25 @@ GOOGLE_SPREADSHEET_ID=your-spreadsheet-id
 GOOGLE_SERVICE_ACCOUNT_KEY={"type":"service_account",...}
 ```
 
+### Server Python (הרשמה):
+העתק את `server-python/env-template.txt` ל-`server-python/.env`:
+
+```bash
+copy server-python/env-template.txt server-python/.env
+```
+
+ערוך את הקובץ עם הפרטים שלך:
+```env
+MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/
+DATABASE_NAME=registration_db
+NODE_SERVER_URL=http://localhost:4000
+PORT=5000
+```
+
 ### איך לקבל OpenAI API Key?
 1. לך ל-https://platform.openai.com/api-keys
 2. צור API Key חדש
-3. העתק והדבק ל-.env
+3. העתק והדבק ל-server-node/.env
 
 ### Google Sheets (אופציונלי)
 אם רוצה אינטגרציה עם Google Sheets:
@@ -87,6 +103,13 @@ npm start
 ```
 
 אמור לראות: `🚀 Node server running on port 4000`
+
+### הרץ את שרת ההרשמה (אופציונלי):
+בטרמינל נפרד:
+```bash
+cd server-python
+python -m uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+```
 
 ### הרץ את האתר:
 בטרמינל נפרד:
