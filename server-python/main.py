@@ -18,11 +18,13 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",  # React Web
+        "http://localhost:3000",  # React Web (local)
         "http://127.0.0.1:3000",
         "http://localhost:19006", # Expo (web preview)
         "exp://127.0.0.1:19000",  # Expo (mobile)
-        "http://10.0.2.2:19000"   # Android emulator
+        "http://10.0.2.2:19000",  # Android emulator
+        "https://*.azurewebsites.net",  # Azure App Services
+        "*"  # Allow all origins in production (you can restrict this later)
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -47,6 +49,14 @@ class UserRegister(BaseModel):
     password: str
 
 # --- Routes ---
+@app.get("/")
+def root():
+    return {"message": "Registration API is running", "status": "healthy"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "service": "registration-api"}
+
 @app.post("/register")
 def register_user(user: UserRegister):
     # בדוק אם המשתמש כבר קיים

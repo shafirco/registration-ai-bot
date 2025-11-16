@@ -59,5 +59,13 @@ app.post("/agent/chat", async (req, res) => {
   }
 });
 
-const PORT = 4000;
-app.listen(PORT, () => console.log(`🚀 Node server running on port ${PORT}`));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Node server running on port ${PORT}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`🌐 Production server running`);
+  } else {
+    console.log(`📱 Mobile access: http://10.0.0.5:${PORT}`);
+    console.log(`💻 Local access: http://localhost:${PORT}`);
+  }
+});

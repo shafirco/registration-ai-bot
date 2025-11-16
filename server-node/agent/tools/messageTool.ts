@@ -22,7 +22,13 @@ export const messageTool = new DynamicStructuredTool({
       const { spreadsheetId, chatLogSheetName } = GOOGLE_SHEETS_CONFIG;
 
       if (!spreadsheetId) {
-        return JSON.stringify({ error: 'Google Spreadsheet ID is not configured' });
+        console.log('Google Spreadsheet ID is not configured - logging to console only');
+        console.log(`Chat Log: ${new Date().toISOString()} | ${name} (${phone}): ${message} -> ${response}`);
+        return JSON.stringify({ 
+          success: true, 
+          message: 'השיחה נרשמה מקומית (Google Sheets לא מוגדר)',
+          logged_to: 'console'
+        });
       }
 
       const timestamp = new Date().toISOString();
@@ -40,14 +46,18 @@ export const messageTool = new DynamicStructuredTool({
 
       return JSON.stringify({
         success: true,
-        message: 'השיחה נרשמה בהצלחה',
+        message: 'השיחה נרשמה בהצלחה ב-Google Sheets',
         timestamp,
       });
     } catch (error: any) {
       console.error('Error in messageTool:', error);
+      // Fallback to console logging
+      console.log(`Chat Log (fallback): ${new Date().toISOString()} | ${name} (${phone}): ${message} -> ${response}`);
       return JSON.stringify({
-        error: 'שגיאה ברישום השיחה',
+        success: true,
+        message: 'השיחה נרשמה מקומית (Google Sheets לא זמין)',
         details: error.message,
+        logged_to: 'console'
       });
     }
   },

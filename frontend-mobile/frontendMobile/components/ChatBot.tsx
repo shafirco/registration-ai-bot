@@ -92,7 +92,10 @@ export default function ChatBot() {
       // Android Emulator: http://10.0.2.2:4000
       // iOS Simulator: http://localhost:4000
       // מכשיר פיזי: http://YOUR_COMPUTER_IP:4000
-      const response = await fetch('http://10.0.2.2:4000/agent/chat', {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+      
+      const response = await fetch('http://10.0.0.5:4000/agent/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +105,10 @@ export default function ChatBot() {
           phone: userPhone,
           message: userMessage,
         }),
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error('Failed to get response');
@@ -115,11 +121,19 @@ export default function ChatBot() {
       ]);
     } catch (error) {
       console.error('Error:', error);
+      let errorMessage = 'מצטער, אירעה שגיאה. אנא נסה שוב מאוחר יותר.';
+      
+      if (error.name === 'AbortError') {
+        errorMessage = 'החיבור לשרת נכשל (timeout). בדוק שהשרת רץ ושהכתובת נכונה.';
+      } else if (error.message.includes('Network request failed')) {
+        errorMessage = 'לא ניתן להתחבר לשרת. בדוק את החיבור לאינטרנט והגדרות הרשת.';
+      }
+      
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: 'מצטער, אירעה שגיאה. אנא נסה שוב מאוחר יותר.',
+          content: errorMessage,
         },
       ]);
     } finally {

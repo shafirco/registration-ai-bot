@@ -1,15 +1,15 @@
-# הדרכת התקנה והפעלה
+# Setup & Installation Guide
 
-## דרישות
+## Requirements
 
 - Node.js (v18+)
 - Python 3.8+
 - npm
-- חשבון OpenAI עם API Key
+- OpenAI account with API Key
 
-## שלב 1: התקנת חבילות
+## Step 1: Install Packages
 
-### Server Node (הבוט):
+### Node Server (Bot):
 ```bash
 cd server-node
 npm install
@@ -21,13 +21,13 @@ cd frontend-web
 npm install
 ```
 
-### Frontend Mobile (אופציונלי):
+### Frontend Mobile (Optional):
 ```bash
 cd frontend-mobile/frontendMobile
 npm install
 ```
 
-### Server Python (אופציונלי):
+### Python Server (Optional):
 ```bash
 cd server-python
 python -m venv venv
@@ -36,28 +36,29 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-## שלב 2: הגדרת קבצי .env
+## Step 2: Configure .env Files
 
-### Server Node (בוט הצ'אט):
-צור קובץ `.env` בתיקיית `server-node/`:
+### Node Server (Chat Bot):
+Create a `.env` file in `server-node/`:
 
 ```env
-# חובה!
+# Required!
 OPENAI_API_KEY=sk-your-openai-key-here
 
-# אופציונלי (לGoogle Sheets)
+# Optional (for Google Sheets)
 GOOGLE_SPREADSHEET_ID=your-spreadsheet-id
 GOOGLE_SERVICE_ACCOUNT_KEY={"type":"service_account",...}
 ```
 
-### Server Python (הרשמה):
-העתק את `server-python/env-template.txt` ל-`server-python/.env`:
+### Python Server (Registration):
+Copy `server-python/env-template.txt` to `server-python/.env`:
 
 ```bash
 copy server-python/env-template.txt server-python/.env
 ```
 
-ערוך את הקובץ עם הפרטים שלך:
+Edit the file with your details:
+
 ```env
 MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/
 DATABASE_NAME=registration_db
@@ -65,168 +66,166 @@ NODE_SERVER_URL=http://localhost:4000
 PORT=5000
 ```
 
-### איך לקבל OpenAI API Key?
-1. לך ל-https://platform.openai.com/api-keys
-2. צור API Key חדש
-3. העתק והדבק ל-server-node/.env
+### How to get your OpenAI API Key?
+1. Go to: https://platform.openai.com/api-keys
+2. Create a new API Key
+3. Copy and paste it to server-node/.env
 
-### Google Sheets (אופציונלי)
-אם רוצה אינטגרציה עם Google Sheets:
-1. צור Google Cloud Project
-2. הפעל Google Sheets API
-3. צור Service Account
-4. שתף את ה-Spreadsheet עם ה-Service Account
-5. העתק את ה-JSON Key ל-.env
+### Google Sheets (Optional)
+If you want Google Sheets integration:
+1. Create a Google Cloud Project
+2. Enable Google Sheets API
+3. Create a Service Account
+4. Share the spreadsheet with the service account
+5. Paste the JSON Key into the .env file
 
-## שלב 3: קומפילציה של TypeScript
+## Step 3: Compile TypeScript
 
-**חשוב!** הבוט כתוב ב-TypeScript וצריך לקמפל אותו:
+**Important!** The bot is written in TypeScript and needs compiling:
 
 ```bash
 cd server-node
 npm run build
 ```
 
-זה יוצר תיקיית `dist/` עם קבצי JavaScript.
+This creates a `dist/` folder with JavaScript files.
 
-**כל פעם שמשנים קוד ב-`agent/`**, צריך לרוץ:
+**Whenever you make code changes in `agent/`**, run:
 ```bash
 npm run build
 ```
 
-## שלב 4: הפעלה
+## Step 4: Running the Servers & Frontends
 
-### הרץ את שרת הבוט (חובה!):
+### Run the bot server (required):
 ```bash
 cd server-node
 npm start
 ```
 
-אמור לראות: `🚀 Node server running on port 4000`
+You should see: `🚀 Node server running on port 4000`
 
-### הרץ את שרת ההרשמה (אופציונלי):
-בטרמינל נפרד:
+### Run the registration server (optional):
+In a new terminal:
 ```bash
 cd server-python
 python -m uvicorn main:app --host 0.0.0.0 --port 5000 --reload
 ```
 
-### הרץ את האתר:
-בטרמינל נפרד:
+### Run the website:
+In a new terminal:
 ```bash
 cd frontend-web
 npm start
 ```
 
-האתר יפתח ב-`http://localhost:3000`
+The app should open at `http://localhost:3000`
 
-תראה כפתור צף 💬 בפינה ימין למטה!
-
-### הרץ מובייל (אופציונלי):
-בטרמינל נפרד:
+### Run Mobile (optional):
+In a new terminal:
 ```bash
 cd frontend-mobile/frontendMobile
-npm run android  # או npm run ios
+npm run android  # or npm run ios
 ```
 
-**חשוב למובייל:** שנה את כתובת השרת בקובץ:
-`components/ChatBot.tsx` שורה 95
+**Mobile Note:** Update the server URL in:
+`components/ChatBot.tsx` line 95
 
 - Android Emulator: `http://10.0.2.2:4000/agent/chat`
 - iOS Simulator: `http://localhost:4000/agent/chat`
-- מכשיר פיזי: `http://YOUR_IP:4000/agent/chat`
+- Physical Device: `http://YOUR_IP:4000/agent/chat`
 
-## בדיקה מהירה
+## Quick Test
 
-אחרי שהשרת רץ, נסה:
+Once your server is running, try:
 ```bash
 curl http://localhost:4000/random-message
 ```
 
-אמור לקבל תשובה JSON בעברית.
+You should get a JSON reply in Hebrew.
 
-## פתרון בעיות
+## Troubleshooting
 
-### 1. הבוט לא מגיב / שגיאה
+### 1. Bot not responding / error
 ```bash
-# בדוק שהשרת רץ
+# Ensure server is running
 curl http://localhost:4000/random-message
 
-# קומפל את TypeScript מחדש
+# Recompile TypeScript
 cd server-node
 npm run build
 
-# אתחל את השרת
+# Restart the server
 npm start
 ```
 
-### 2. חסר .env
+### 2. Missing .env
 ```bash
 cd server-node
-# צור קובץ .env עם OPENAI_API_KEY
+# Create .env with OPENAI_API_KEY
 ```
 
-### 3. שגיאות בקומפילציה
+### 3. Compilation errors
 ```bash
 cd server-node
 npm install
 npm run build
 ```
 
-### 4. הכפתור לא מופיע באתר
-- רענן את העמוד
-- פתח Console (F12) וחפש שגיאות
+### 4. Button not appearing on the site
+- Refresh the page
+- Open the browser console (F12) and check for errors
 
-## תזרים עבודה רגיל
+## Typical Workflow
 
-1. **פתח 2 טרמינלים:**
-   - טרמינל 1: `cd server-node && npm start`
-   - טרמינל 2: `cd frontend-web && npm start`
+1. **Open 2 terminals:**
+   - Terminal 1: `cd server-node && npm start`
+   - Terminal 2: `cd frontend-web && npm start`
 
-2. **אם משנה קוד בבוט:**
+2. **If you change bot code:**
    ```bash
    cd server-node
    npm run build
-   # Ctrl+C בטרמינל השרת
+   # Ctrl+C in the server terminal
    npm start
    ```
 
-3. **אם משנה קוד באתר:**
-   - שמירה תעדכן אוטומטית (Hot Reload)
+3. **If you change web code:**
+   - Saving the file will update automatically (Hot Reload)
 
-## מה הבוט יודע?
+## What can the bot do?
 
-- ✅ לדבר עברית בלבד
-- ✅ לבדוק סטטוס משלוחים (12345, 67890)
-- ✅ לשמור מידע לקוחות ב-Google Sheets
-- ✅ לרשום שיחות
-- ✅ לעודד הזמנות חדשות
+- ✅ Speak Hebrew only
+- ✅ Check delivery statuses (12345, 67890)
+- ✅ Store customer information in Google Sheets
+- ✅ Log conversations
+- ✅ Encourage new orders
 
-## נתונים לדוגמה
+## Test Data
 
-משלוחים לבדיקה:
-- מספר משלוח: **12345** (בדרך)
-- מספר משלוח: **67890** (נמסר)
+Example deliveries to test:
+- Delivery number: **12345** (in transit)
+- Delivery number: **67890** (delivered)
 
-## סיכום מהיר
+## Quick Summary
 
 ```bash
-# התקנה (פעם אחת)
+# One-time setup
 cd server-node && npm install
 cd ../frontend-web && npm install
 
-# צור .env עם OPENAI_API_KEY
+# Create .env with OPENAI_API_KEY
 
-# קומפל (פעם אחת או אחרי שינויים ב-agent/)
+# Build TypeScript (once or after changes in agent/)
 cd server-node && npm run build
 
-# הרצה (כל פעם)
+# Running (every time)
 Terminal 1: cd server-node && npm start
 Terminal 2: cd frontend-web && npm start
 
-# גלוש ל: http://localhost:3000
-# לחץ על 💬
+# Open: http://localhost:3000
+# Click the chat floating button
 ```
 
-זהו! 🚀
+That's it! 🚀
 

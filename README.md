@@ -1,30 +1,30 @@
 # A.B Deliveries - Registration & Chat Bot
 
-פרויקט מערכת הרשמה עם בוט צ'אט חכם בעברית.
+Project for a registration system with a smart chat bot in Hebrew.
 
-## מה יש בפרויקט?
+## Project Structure
 
 ```
 registration-ai-bot/
-├── server-python/          # שרת Python להרשמה (FastAPI)
-├── server-node/           # שרת Node.js + בוט LangChain בעברית
-├── frontend-web/          # אתר React עם בוט צ'אט
-└── frontend-mobile/       # אפליקציית React Native עם בוט צ'אט
+├── server-python/          # Python server for registration (FastAPI)
+├── server-node/           # Node.js server + LangChain-based bot
+├── frontend-web/          # React web app with chat bot
+└── frontend-mobile/       # React Native mobile app with chat bot
 ```
 
-## תכונות
+## Features
 
-- 📝 מערכת הרשמה עם AI בעברית
-- 💬 בוט צ'אט חכם (LangChain + GPT-4o-mini)
-- 📊 אינטגרציה עם Google Sheets
-- 📦 בדיקת סטטוס משלוחים
-- 🌐 תמיכה ב-Web ו-Mobile
+- 📝 Registration system with AI
+- 💬 Smart chat bot (LangChain + GPT-4o-mini)
+- 📊 Google Sheets integration
+- 📦 Delivery status checking
+- 🌐 Web and Mobile support
 
-## התקנה מהירה
+## Quick Installation
 
-ראה קובץ [SETUP.md](SETUP.md) להוראות מלאות.
+See [SETUP.md](SETUP.md) for full instructions.
 
-## טכנולוגיות
+## Technologies
 
 **Backend:**
 - Python (FastAPI)
@@ -38,27 +38,27 @@ registration-ai-bot/
 - React Native (Mobile)
 - Expo
 
-## מבנה הבוט
+## Bot Architecture
 
-הבוט משתמש ב-LangChain עם 3 כלים:
-1. **googleSheetsTool** - ניהול מידע לקוחות
-2. **deliveryStatusTool** - בדיקת סטטוס משלוחים
-3. **messageTool** - רישום שיחות
+The bot uses LangChain with 3 main tools:
+1. **googleSheetsTool** - Manage customer information
+2. **deliveryStatusTool** - Check delivery status
+3. **messageTool** - Log conversations
 
-## הרצה
+## Running
 
 ```bash
-# 1. שרת הבוט
+# 1. Node bot server
 cd server-node
 npm start
 
-# 2. אתר
+# 2. Web frontend
 cd frontend-web
 npm start
 
-# 3. מובייל (אופציונלי)
+# 3. Mobile (optional)
 cd frontend-mobile/frontendMobile
-npm run android  # או ios
+npm run android  # or ios
 ```
 
 ## License

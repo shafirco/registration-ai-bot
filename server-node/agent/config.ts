@@ -13,10 +13,20 @@ export const GOOGLE_SHEETS_CONFIG = {
 // Initialize Google Sheets API
 export async function getGoogleSheetsClient() {
   try {
+    // Check if Google Sheets is properly configured
+    if (!process.env.GOOGLE_SPREADSHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+      throw new Error('Google Sheets not configured');
+    }
+
+    let credentials;
+    try {
+      credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
+    } catch (parseError) {
+      throw new Error('Invalid Google Service Account Key format');
+    }
+
     const auth = new google.auth.GoogleAuth({
-      credentials: process.env.GOOGLE_SERVICE_ACCOUNT_KEY 
-        ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
-        : undefined,
+      credentials,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
