@@ -60,7 +60,7 @@ npm start
 
 # 2. Mobile app
 cd frontend-mobile/frontendMobile
-npx expo start
+npx start
 ```
 
 *Note: Servers are deployed on Azure App Service*
