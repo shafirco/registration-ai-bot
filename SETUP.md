@@ -114,7 +114,7 @@ The app should open at `http://localhost:3000`
 ### Run Mobile:
 ```bash
 cd frontend-mobile/frontendMobile
-npx expo start
+npx start
 ```
 
 Scan the QR code with Expo Go app on your phone.
@@ -171,7 +171,7 @@ npm run build
 
 2. **For mobile development:**
    ```bash
-   cd frontend-mobile/frontendMobile && npx expo start
+   cd frontend-mobile/frontendMobile && npx start
    ```
 
 3. **Frontend changes:**
