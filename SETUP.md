@@ -95,25 +95,15 @@ This creates a `dist/` folder with JavaScript files.
 npm run build
 ```
 
-## Step 4: Running the Servers & Frontends
+## Step 4: Running the Application
 
-### Run the bot server (required):
-```bash
-cd server-node
-npm start
-```
+**🚀 Servers are deployed on Azure! No need to run them locally.**
 
-You should see: `🚀 Node server running on port 4000`
-
-### Run the registration server (optional):
-In a new terminal:
-```bash
-cd server-python
-python -m uvicorn main:app --host 0.0.0.0 --port 5000 --reload
-```
+### Live Services:
+- **Chat Bot API**: https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net
+- **Registration API**: https://registration-bot-python-dgebdmedh3g3g7ge.israelcentral-01.azurewebsites.net
 
 ### Run the website:
-In a new terminal:
 ```bash
 cd frontend-web
 npm start
@@ -121,25 +111,21 @@ npm start
 
 The app should open at `http://localhost:3000`
 
-### Run Mobile (optional):
-In a new terminal:
+### Run Mobile:
 ```bash
 cd frontend-mobile/frontendMobile
-npm run android  # or npm run ios
+npx expo start
 ```
 
-**Mobile Note:** Update the server URL in:
-`components/ChatBot.tsx` line 95
+Scan the QR code with Expo Go app on your phone.
 
-- Android Emulator: `http://10.0.2.2:4000/agent/chat`
-- iOS Simulator: `http://localhost:4000/agent/chat`
-- Physical Device: `http://YOUR_IP:4000/agent/chat`
+**Note:** Both web and mobile apps are configured to use the Azure servers automatically.
 
 ## Quick Test
 
-Once your server is running, try:
+Test the live Azure services:
 ```bash
-curl http://localhost:4000/random-message
+curl https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net/random-message
 ```
 
 You should get a JSON reply in Hebrew.
@@ -178,20 +164,19 @@ npm run build
 
 ## Typical Workflow
 
-1. **Open 2 terminals:**
-   - Terminal 1: `cd server-node && npm start`
-   - Terminal 2: `cd frontend-web && npm start`
-
-2. **If you change bot code:**
+1. **Open 1 terminal for frontend:**
    ```bash
-   cd server-node
-   npm run build
-   # Ctrl+C in the server terminal
-   npm start
+   cd frontend-web && npm start
    ```
 
-3. **If you change web code:**
-   - Saving the file will update automatically (Hot Reload)
+2. **For mobile development:**
+   ```bash
+   cd frontend-mobile/frontendMobile && npx expo start
+   ```
+
+3. **Frontend changes:**
+   - Saving files will update automatically (Hot Reload)
+   - Servers are already running on Azure
 
 ## What can the bot do?
 

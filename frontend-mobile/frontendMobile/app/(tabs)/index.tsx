@@ -37,8 +37,8 @@ export default function App() {
     }
 
     try {
-      const res = await fetch("http://10.0.0.5:5000/register", {
-        // ⚠️ Android Emulator = 10.0.2.2
+      const res = await fetch("https://registration-bot-python-dgebdmedh3g3g7ge.israelcentral-01.azurewebsites.net/register", {
+        // Updated to use Azure Python server
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

@@ -45,21 +45,25 @@ The bot uses LangChain with 3 main tools:
 2. **deliveryStatusTool** - Check delivery status
 3. **messageTool** - Log conversations
 
-## Running
+## Live Demo
+
+**Deployed Services:**
+- 🤖 **Chat Bot API**: https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net
+- 📝 **Registration API**: https://registration-bot-python-dgebdmedh3g3g7ge.israelcentral-01.azurewebsites.net
+
+## Running Locally
 
 ```bash
-# 1. Node bot server
-cd server-node
-npm start
-
-# 2. Web frontend
+# 1. Web frontend
 cd frontend-web
 npm start
 
-# 3. Mobile (optional)
+# 2. Mobile app
 cd frontend-mobile/frontendMobile
-npm run android  # or ios
+npx expo start
 ```
+
+*Note: Servers are deployed on Azure App Service*
 
 ## License
 

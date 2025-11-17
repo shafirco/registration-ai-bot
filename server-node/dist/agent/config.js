@@ -1,14 +1,21 @@
-import { google } from 'googleapis';
-import dotenv from 'dotenv';
-dotenv.config();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SYSTEM_PROMPT = exports.GOOGLE_SHEETS_CONFIG = void 0;
+exports.getGoogleSheetsClient = getGoogleSheetsClient;
+const googleapis_1 = require("googleapis");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 // Google Sheets configuration
-export const GOOGLE_SHEETS_CONFIG = {
+exports.GOOGLE_SHEETS_CONFIG = {
     spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID || '',
     customerSheetName: 'Customers',
     chatLogSheetName: 'ChatLogs',
 };
 // Initialize Google Sheets API
-export async function getGoogleSheetsClient() {
+async function getGoogleSheetsClient() {
     try {
         // Check if Google Sheets is properly configured
         if (!process.env.GOOGLE_SPREADSHEET_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
@@ -21,12 +28,12 @@ export async function getGoogleSheetsClient() {
         catch (parseError) {
             throw new Error('Invalid Google Service Account Key format');
         }
-        const auth = new google.auth.GoogleAuth({
+        const auth = new googleapis_1.google.auth.GoogleAuth({
             credentials,
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
         const authClient = await auth.getClient();
-        const sheets = google.sheets({ version: 'v4', auth: authClient });
+        const sheets = googleapis_1.google.sheets({ version: 'v4', auth: authClient });
         return sheets;
     }
     catch (error) {
@@ -35,7 +42,7 @@ export async function getGoogleSheetsClient() {
     }
 }
 // System prompt for the agent
-export const SYSTEM_PROMPT = `דבר רק בעברית. אתה עוזר בשם A.B Deliveries.
+exports.SYSTEM_PROMPT = `דבר רק בעברית. אתה עוזר בשם A.B Deliveries.
 ענה ללקוחות על שאלות לגבי סטטוס משלוחים, הצעות להזמנות חדשות, ותמיכה כללית.
 תשובותיך צריכות להיות מנומסות, חכמות, ותמיד לכלול עידוד חיובי להזמנה נוספת.
 אם יש צורך לבדוק סטטוס משלוח, השתמש בכלי deliveryStatusTool.

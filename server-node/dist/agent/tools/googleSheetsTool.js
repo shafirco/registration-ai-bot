@@ -1,28 +1,31 @@
-import { DynamicStructuredTool } from '@langchain/core/tools';
-import { z } from 'zod';
-import { getGoogleSheetsClient, GOOGLE_SHEETS_CONFIG } from '../config.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.googleSheetsTool = void 0;
+const tools_1 = require("@langchain/core/tools");
+const zod_1 = require("zod");
+const config_js_1 = require("../config.js");
 // Tool for reading and writing customer data to Google Sheets
-export const googleSheetsTool = new DynamicStructuredTool({
+exports.googleSheetsTool = new tools_1.DynamicStructuredTool({
     name: 'googleSheetsTool',
     description: `כלי לקריאה וכתיבה של מידע לקוחות ב-Google Sheets.
   השתמש בכלי זה כדי:
   - לקרוא מידע על לקוח לפי מספר טלפון
   - לעדכן או להוסיף מידע לקוח חדש
   - לרשום הזמנות ופרטי משלוח`,
-    schema: z.object({
-        action: z.enum(['read', 'write', 'update']).describe('הפעולה לביצוע: read (קריאה), write (כתיבה), update (עדכון)'),
-        phone: z.string().describe('מספר הטלפון של הלקוח'),
-        data: z.object({
-            name: z.string().optional(),
-            email: z.string().optional(),
-            address: z.string().optional(),
-            lastOrder: z.string().optional(),
+    schema: zod_1.z.object({
+        action: zod_1.z.enum(['read', 'write', 'update']).describe('הפעולה לביצוע: read (קריאה), write (כתיבה), update (עדכון)'),
+        phone: zod_1.z.string().describe('מספר הטלפון של הלקוח'),
+        data: zod_1.z.object({
+            name: zod_1.z.string().optional(),
+            email: zod_1.z.string().optional(),
+            address: zod_1.z.string().optional(),
+            lastOrder: zod_1.z.string().optional(),
         }).optional().describe('מידע נוסף על הלקוח (רק לכתיבה ועדכון)'),
     }),
     func: async ({ action, phone, data }) => {
         try {
-            const sheets = await getGoogleSheetsClient();
-            const { spreadsheetId, customerSheetName } = GOOGLE_SHEETS_CONFIG;
+            const sheets = await (0, config_js_1.getGoogleSheetsClient)();
+            const { spreadsheetId, customerSheetName } = config_js_1.GOOGLE_SHEETS_CONFIG;
             if (!spreadsheetId) {
                 return JSON.stringify({ error: 'Google Spreadsheet ID is not configured' });
             }

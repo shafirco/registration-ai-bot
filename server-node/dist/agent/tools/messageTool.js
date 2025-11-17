@@ -1,24 +1,27 @@
-import { DynamicStructuredTool } from '@langchain/core/tools';
-import { z } from 'zod';
-import { getGoogleSheetsClient, GOOGLE_SHEETS_CONFIG } from '../config.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.messageTool = void 0;
+const tools_1 = require("@langchain/core/tools");
+const zod_1 = require("zod");
+const config_js_1 = require("../config.js");
 // Tool for logging chat messages to Google Sheets
-export const messageTool = new DynamicStructuredTool({
+exports.messageTool = new tools_1.DynamicStructuredTool({
     name: 'messageTool',
     description: `כלי לרישום שיחות צ'אט ב-Google Sheets.
   השתמש בכלי זה כדי:
   - לרשום הודעות מלקוחות
   - לתעד את השיחה לצורך מעקב עתידי
   - לשמור היסטוריית תקשורת עם הלקוח`,
-    schema: z.object({
-        name: z.string().describe('שם הלקוח'),
-        phone: z.string().describe('מספר הטלפון של הלקוח'),
-        message: z.string().describe('ההודעה מהלקוח'),
-        response: z.string().describe('התשובה שניתנה ללקוח'),
+    schema: zod_1.z.object({
+        name: zod_1.z.string().describe('שם הלקוח'),
+        phone: zod_1.z.string().describe('מספר הטלפון של הלקוח'),
+        message: zod_1.z.string().describe('ההודעה מהלקוח'),
+        response: zod_1.z.string().describe('התשובה שניתנה ללקוח'),
     }),
     func: async ({ name, phone, message, response }) => {
         try {
-            const sheets = await getGoogleSheetsClient();
-            const { spreadsheetId, chatLogSheetName } = GOOGLE_SHEETS_CONFIG;
+            const sheets = await (0, config_js_1.getGoogleSheetsClient)();
+            const { spreadsheetId, chatLogSheetName } = config_js_1.GOOGLE_SHEETS_CONFIG;
             if (!spreadsheetId) {
                 console.log('Google Spreadsheet ID is not configured - logging to console only');
                 console.log(`Chat Log: ${new Date().toISOString()} | ${name} (${phone}): ${message} -> ${response}`);

@@ -1,5 +1,8 @@
-import { DynamicStructuredTool } from '@langchain/core/tools';
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deliveryStatusTool = void 0;
+const tools_1 = require("@langchain/core/tools");
+const zod_1 = require("zod");
 // Mock delivery data - in production, this would call a real API
 const mockDeliveries = {
     '12345': {
@@ -18,15 +21,15 @@ const mockDeliveries = {
     },
 };
 // Tool for checking delivery status
-export const deliveryStatusTool = new DynamicStructuredTool({
+exports.deliveryStatusTool = new tools_1.DynamicStructuredTool({
     name: 'deliveryStatusTool',
     description: `כלי לבדיקת סטטוס משלוח.
   השתמש בכלי זה כדי:
   - לבדוק את מיקום החבילה הנוכחי
   - לקבל זמן משלוח משוער
   - לראות את העדכון האחרון על המשלוח`,
-    schema: z.object({
-        shipmentId: z.string().describe('מספר המשלוח/מעקב'),
+    schema: zod_1.z.object({
+        shipmentId: zod_1.z.string().describe('מספר המשלוח/מעקב'),
     }),
     func: async ({ shipmentId }) => {
         try {

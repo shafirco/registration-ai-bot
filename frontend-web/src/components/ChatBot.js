@@ -61,7 +61,7 @@ function ChatBot() {
     setIsTyping(true);
 
     try {
-      const response = await fetch('http://localhost:4000/agent/chat', {
+      const response = await fetch('https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net/agent/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

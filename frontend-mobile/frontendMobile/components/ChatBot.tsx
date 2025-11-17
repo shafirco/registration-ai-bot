@@ -95,7 +95,7 @@ export default function ChatBot() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
       
-      const response = await fetch('http://10.0.0.5:4000/agent/chat', {
+      const response = await fetch('https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net/agent/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,10 +123,12 @@ export default function ChatBot() {
       console.error('Error:', error);
       let errorMessage = 'מצטער, אירעה שגיאה. אנא נסה שוב מאוחר יותר.';
       
-      if (error.name === 'AbortError') {
-        errorMessage = 'החיבור לשרת נכשל (timeout). בדוק שהשרת רץ ושהכתובת נכונה.';
-      } else if (error.message.includes('Network request failed')) {
-        errorMessage = 'לא ניתן להתחבר לשרת. בדוק את החיבור לאינטרנט והגדרות הרשת.';
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = 'החיבור לשרת נכשל (timeout). בדוק שהשרת רץ ושהכתובת נכונה.';
+        } else if (error.message.includes('Network request failed')) {
+          errorMessage = 'לא ניתן להתחבר לשרת. בדוק את החיבור לאינטרנט והגדרות הרשת.';
+        }
       }
       
       setMessages((prev) => [

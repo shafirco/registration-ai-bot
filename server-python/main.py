@@ -35,12 +35,47 @@ app.add_middleware(
 MONGODB_URL = os.getenv("MONGODB_URL")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "registration_db")
 
-if not MONGODB_URL:
-    raise ValueError("MONGODB_URL environment variable is required")
-
-client = MongoClient(MONGODB_URL)
-db = client[DATABASE_NAME]
-users_collection = db["users"]
+# Initialize MongoDB connection (optional)
+users_collection = None
+if MONGODB_URL:
+    try:
+        print("🔄 Attempting MongoDB connection...")
+        
+        # Parse and modify the connection string for Azure compatibility
+        if "mongodb+srv://" in MONGODB_URL:
+            # For Azure, we need to modify the connection string
+            modified_url = MONGODB_URL
+            if "tls=true" not in modified_url:
+                if "?" in modified_url:
+                    modified_url += "&tls=true&tlsAllowInvalidCertificates=true"
+                else:
+                    modified_url += "?tls=true&tlsAllowInvalidCertificates=true"
+            
+            print(f"🔗 Using modified connection string for Azure")
+            
+            client = MongoClient(
+                modified_url,
+                serverSelectionTimeoutMS=10000,
+                connectTimeoutMS=10000,
+                socketTimeoutMS=10000,
+                maxPoolSize=1,
+                retryWrites=True
+            )
+        else:
+            client = MongoClient(MONGODB_URL)
+        
+        # Test connection
+        client.admin.command('ping')
+        db = client[DATABASE_NAME]
+        users_collection = db["users"]
+        print("✅ MongoDB connected successfully")
+        
+    except Exception as e:
+        print(f"⚠️ MongoDB connection failed: {e}")
+        print("📝 Registration will work without database storage")
+        users_collection = None
+else:
+    print("📝 No MongoDB URL provided - registration will work without database storage")
 
 # --- Request model ---
 class UserRegister(BaseModel):
@@ -59,26 +94,35 @@ def health_check():
 
 @app.post("/register")
 def register_user(user: UserRegister):
-    # בדוק אם המשתמש כבר קיים
-    if users_collection.find_one({"email": user.email}):
-        raise HTTPException(status_code=400, detail="User already exists")
+    # בדוק אם יש חיבור למסד נתונים
+    if users_collection is not None:
+        try:
+            # בדוק אם המשתמש כבר קיים
+            if users_collection.find_one({"email": user.email}):
+                raise HTTPException(status_code=400, detail="User already exists")
 
-    # הצפן סיסמה
-    hashed_pw = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
+            # הצפן סיסמה
+            hashed_pw = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
 
-    # צור מסמך חדש
-    user_doc = {
-        "name": user.name,
-        "email": user.email,
-        "password_hash": hashed_pw.decode('utf-8'),
-        "created_at": datetime.utcnow()
-    }
+            # צור מסמך חדש
+            user_doc = {
+                "name": user.name,
+                "email": user.email,
+                "password_hash": hashed_pw.decode('utf-8'),
+                "created_at": datetime.utcnow()
+            }
 
-    # שמור בבסיס הנתונים
-    users_collection.insert_one(user_doc)
+            # שמור בבסיס הנתונים
+            users_collection.insert_one(user_doc)
+            print(f"✅ User {user.email} saved to database")
+        except Exception as e:
+            print(f"⚠️ Database error: {e}")
+            # Continue without database
+    else:
+        print(f"📝 User registration (no database): {user.name} - {user.email}")
 
     # --- קרא לשרת Node.js כדי להביא הודעת AI ---
-    NODE_SERVER_URL = os.getenv("NODE_SERVER_URL", "http://localhost:4000")
+    NODE_SERVER_URL = os.getenv("NODE_SERVER_URL", "https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net")
     try:
         response = requests.get(f"{NODE_SERVER_URL}/random-message")
         ai_data = response.json()
