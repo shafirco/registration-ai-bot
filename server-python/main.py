@@ -94,17 +94,17 @@ def health_check():
 
 @app.post("/register")
 def register_user(user: UserRegister):
-    # בדוק אם יש חיבור למסד נתונים
+    
     if users_collection is not None:
         try:
-            # בדוק אם המשתמש כבר קיים
+    
             if users_collection.find_one({"email": user.email}):
                 raise HTTPException(status_code=400, detail="User already exists")
 
-            # הצפן סיסמה
+    
             hashed_pw = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
 
-            # צור מסמך חדש
+    
             user_doc = {
                 "name": user.name,
                 "email": user.email,
@@ -112,7 +112,7 @@ def register_user(user: UserRegister):
                 "created_at": datetime.utcnow()
             }
 
-            # שמור בבסיס הנתונים
+    
             users_collection.insert_one(user_doc)
             print(f"✅ User {user.email} saved to database")
         except Exception as e:
@@ -121,7 +121,7 @@ def register_user(user: UserRegister):
     else:
         print(f"📝 User registration (no database): {user.name} - {user.email}")
 
-    # --- קרא לשרת Node.js כדי להביא הודעת AI ---
+    
     NODE_SERVER_URL = os.getenv("NODE_SERVER_URL", "https://registration-bot-node-bfb7g2gscyghg4gc.israelcentral-01.azurewebsites.net")
     try:
         response = requests.get(f"{NODE_SERVER_URL}/random-message")
