@@ -88,10 +88,10 @@ export default function ChatBot() {
     setIsTyping(true);
 
     try {
-      // ⚠️ שנה את הכתובת בהתאם למכשיר שלך:
+      
       // Android Emulator: http://10.0.2.2:4000
       // iOS Simulator: http://localhost:4000
-      // מכשיר פיזי: http://YOUR_COMPUTER_IP:4000
+      //  http://YOUR_COMPUTER_IP:4000
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
       
