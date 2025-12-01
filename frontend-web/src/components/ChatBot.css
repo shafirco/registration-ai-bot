@@ -1,4 +1,4 @@
-/* כפתור פתיחת הצ'אט */
+
 .chat-button {
   position: fixed;
   bottom: 20px;
@@ -28,7 +28,7 @@
   background: linear-gradient(135deg, #e74c3c, #c0392b);
 }
 
-/* חלון הצ'אט */
+
 .chat-window {
   position: fixed;
   bottom: 90px;
@@ -56,7 +56,7 @@
   }
 }
 
-/* כותרת הצ'אט */
+
 .chat-header {
   background: linear-gradient(135deg, #4a90e2, #357abd);
   color: white;
@@ -95,7 +95,6 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* מסך הגדרה ראשונית */
 .chat-setup {
   flex: 1;
   display: flex;
@@ -178,7 +177,7 @@
   transform: translateY(-2px);
 }
 
-/* אזור ההודעות */
+
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -236,7 +235,6 @@
   border-radius: 12px 12px 12px 4px;
 }
 
-/* אנימציית הקלדה */
 .message.typing .message-content {
   display: flex;
   gap: 4px;
@@ -270,7 +268,6 @@
   }
 }
 
-/* אזור הקלדה */
 .chat-input-container {
   display: flex;
   padding: 15px;
@@ -325,7 +322,6 @@
   cursor: not-allowed;
 }
 
-/* הצעות מהירות */
 .quick-actions {
   display: flex;
   gap: 8px;
@@ -371,7 +367,7 @@
   background: #9ca3af;
 }
 
-/* רספונסיבי */
+ 
 @media (max-width: 480px) {
   .chat-window {
     bottom: 0;
