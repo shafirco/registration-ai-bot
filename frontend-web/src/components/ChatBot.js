@@ -20,7 +20,7 @@ function ChatBot() {
   }, [messages]);
 
   useEffect(() => {
-    // בדיקה אם יש מידע שמור
+    
     const savedName = localStorage.getItem('abDeliveriesUserName');
     const savedPhone = localStorage.getItem('abDeliveriesUserPhone');
     if (savedName && savedPhone) {
@@ -136,7 +136,7 @@ function ChatBot() {
           </div>
 
           {!isSetup ? (
-            // טופס פרטים ראשוני
+            
             <div className="chat-setup">
               <div className="setup-content">
                 <div className="setup-icon">👋</div>
@@ -166,7 +166,7 @@ function ChatBot() {
               </div>
             </div>
           ) : (
-            // אזור ההודעות
+            
             <>
               <div className="chat-messages">
                 {messages.map((msg, index) => (
